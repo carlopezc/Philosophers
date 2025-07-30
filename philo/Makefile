@@ -6,19 +6,19 @@
 #    By: carlotalcd <carlotalcd@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/17 12:23:06 by carlopez          #+#    #+#              #
-#    Updated: 2025/07/28 23:33:18 by carlotalcd       ###   ########.fr        #
+#    Updated: 2025/07/30 18:34:36 by carlotalcd       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CCFLAGS = -Wall -Wextra -Werror -g -ftsanitize=address
+CCFLAGS = -Wall -Wextra -Werror -g -lpthread #-fsanitize=thread
 NAME = philo
 
 AR = ar
 ARFLAGS = rcs
 
-LIB = header/ft_philosophers.h
-MAIN = main/main.c 
+LIB = ft_philosophers.h
+MAIN = main.c 
 
 #COLOURS AND TEXT FORMAT
 LIGHT_YELLOW	= \033[1;33m
