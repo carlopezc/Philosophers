@@ -30,6 +30,7 @@ typedef struct s_philos
     long    last_meal;
     t_mtx   r_fork;
     t_mtx   *l_fork;
+    t_mtx   eat;
     pthread_t   thread;
     struct s_main   *main;
 }   t_philos;
@@ -37,7 +38,7 @@ typedef struct s_philos
 typedef struct s_main
 {
     int num_philos;
-    size_t time_to_die;
+    long time_to_die;
     size_t time_to_eat;
     size_t time_to_sleep;
     size_t  time;
