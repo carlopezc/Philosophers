@@ -6,12 +6,12 @@
 #    By: carlotalcd <carlotalcd@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/17 12:23:06 by carlopez          #+#    #+#              #
-#    Updated: 2025/07/30 18:34:36 by carlotalcd       ###   ########.fr        #
+#    Updated: 2025/08/01 18:23:09 by carlotalcd       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CCFLAGS = -Wall -Wextra -Werror -g -lpthread #-fsanitize=thread
+CCFLAGS = -Wall -Wextra -Werror -g -lpthread -fsanitize=thread
 NAME = philo
 
 AR = ar

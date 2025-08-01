@@ -45,6 +45,7 @@ typedef struct s_main
     int num_meals;
     t_philos    **philos;
     bool    dead;
+    bool    all_meals;
     t_mtx   mute_print;
     t_mtx   mute_main;
     long    time_start;

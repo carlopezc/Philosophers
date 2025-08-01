@@ -1,7 +1,5 @@
 #include "ft_philosophers.h"
 
-
-
 long	get_time_ms(void)
 {
 	struct timeval	tv;
@@ -16,16 +14,24 @@ long	get_time_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000) - start_time);
 }
 
-void    ft_usleep(long ms)
+void	ft_usleep(long ms)
 {
-    long    i;
+	long	start;
+	long	now;
+	long	remaining;
 
-	i = 0;
-	while (i < ms)
-    {
-        i += 100;
-		usleep(100);
-    }
+	start = get_time_ms();
+	while (1)
+	{
+		now = get_time_ms();
+		remaining = ms - (now - start);
+		if (remaining <= 0)
+			break;
+		if (remaining > 10)
+			usleep(500);  // más eficiente para tiempos largos
+		else
+			usleep(100);  // más preciso para tramos cortos
+	}
 }
 
 long	elapsed_time(t_philos *philo)
@@ -160,15 +166,15 @@ void    ft_print_actions(t_philos *philo, size_t time, int action)
 {
     (void)time;
     pthread_mutex_lock(&(philo->main->mute_print));
-    if (!(philo->main->dead) && action == EAT)
+    if (!(philo->main->dead) && action == EAT && !philo->main->all_meals)
         printf("%ld %d has eaten\n", get_time_ms(), philo->id);
-    else if (action == DEAD)
+    else if (action == DEAD && !philo->main->all_meals)
         printf("%ld %d died\n", get_time_ms(), philo->id);
-    else if (!(philo->main->dead) && action == FORK)
+    else if (!(philo->main->dead) && action == FORK && !philo->main->all_meals)
         printf("%ld %d has taken a fork\n",get_time_ms(), philo->id);
-    else if (!(philo->main->dead) && action == SLEEP)
+    else if (!(philo->main->dead) && action == SLEEP && !philo->main->all_meals)
         printf("%ld %d is sleeping\n",get_time_ms(),  philo->id);
-    else if (!(philo->main->dead) && action == THINK)
+    else if (!(philo->main->dead) && action == THINK && !philo->main->all_meals)
         printf("%ld %d is thinking\n", get_time_ms(), philo->id);
     pthread_mutex_unlock(&(philo->main->mute_print));
 }
@@ -177,7 +183,7 @@ void    ft_eat_alone(t_philos *philo)
 {
     pthread_mutex_lock(&philo->r_fork);
     ft_print_actions(philo, philo->main->time, FORK);
-    usleep(philo->main->time_to_die * 990);
+    usleep(philo->main->time_to_die);
     pthread_mutex_lock(&philo->main->mute_print);
     printf("%ld %d died\n", get_time_ms(), philo->id);
     pthread_mutex_unlock(&philo->main->mute_print);
@@ -215,28 +221,30 @@ void    ft_eat(t_philos *philo)
     philo->num_meal++;
     pthread_mutex_unlock(&philo->eat);
     ft_print_actions(philo, philo->main->time, EAT);
-    usleep(philo->main->time_to_eat * 1000);
+    ft_usleep(philo->main->time_to_eat);
     pthread_mutex_unlock(philo->l_fork);
     pthread_mutex_unlock(&philo->r_fork);
 }
 
 int is_dead(t_philos *philo)
 {
-    long    die;
+    long	die;
 
-    pthread_mutex_lock(&philo->main->mute_main);
+    pthread_mutex_lock(&philo->eat);
     die = get_time_ms() - philo->last_meal;
-    pthread_mutex_unlock(&philo->main->mute_main);
+    pthread_mutex_unlock(&philo->eat);
+
     if (die > philo->main->time_to_die)
     {
-        pthread_mutex_lock(&philo->main->mute_main);
+        pthread_mutex_lock(&philo->main->mute_print);
         philo->main->dead = true;
-        pthread_mutex_unlock(&philo->main->mute_main);
+        pthread_mutex_unlock(&philo->main->mute_print);
         ft_print_actions(philo, philo->main->time, DEAD);
         return (0);
     }
     return (1);
 }
+
 void    *ft_simulation(void *data)
 {
     t_philos *philo;
@@ -245,14 +253,12 @@ void    *ft_simulation(void *data)
     pthread_mutex_lock(&(philo->main->mute_main));
     pthread_mutex_unlock(&(philo->main->mute_main));
     if (philo->id % 2 != 0)
-        usleep(philo->main->time_to_eat * 1000);
+        ft_usleep(philo->main->time_to_eat);
     while (!(philo->main->dead) && philo->main->num_meals != philo->num_meal)
     {
-        //printf("id : %i, die %ld, get time %ld, last meal %ld\n",philo->id,  get_time_ms() - philo->last_meal, get_time_ms(), philo->last_meal);
         ft_eat(philo);
-        //printf("id : %i, die %ld, get time %ld, last meal %ld\n",philo->id,  get_time_ms() - philo->last_meal, get_time_ms(), philo->last_meal);
         ft_print_actions(philo, philo->main->time, SLEEP);
-        usleep(philo->main->time_to_sleep * 1000);
+        ft_usleep(philo->main->time_to_sleep);
         ft_print_actions(philo, philo->main->time, THINK);
     }
     return (NULL);
@@ -266,7 +272,12 @@ static int	check_meal_count(t_philos *philo, int *flag_meals, t_main *table)
 	pthread_mutex_unlock(&philo->eat);
 	pthread_mutex_lock(&table->mute_main);
 	if (table->num_philos == *flag_meals)
+    {
+        pthread_mutex_lock(&philo->eat);
+        table->all_meals = true;
+        pthread_mutex_unlock(&philo->eat);
 		return (pthread_mutex_unlock(&table->mute_main), 1);
+    }
 	pthread_mutex_unlock(&table->mute_main);
 	return (0);
 }
@@ -298,7 +309,7 @@ void	*monitor(void *data)
 			if (check_death(table->philos[i]))
 				return (NULL);
 		}
-		usleep(1000);
+		usleep(1);
 	}
 	return (NULL);
 }
