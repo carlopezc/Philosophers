@@ -14,6 +14,17 @@ long	get_time_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000) - start_time);
 }
 
+
+int is_simulation_dead(t_main *main)
+{
+	int dead;
+
+	pthread_mutex_lock(&main->mute_main);
+	dead = main->dead;
+	pthread_mutex_unlock(&main->mute_main);
+	return (dead);
+}
+
 void	ft_usleep(long ms)
 {
 	long	start;
@@ -48,6 +59,7 @@ void    ft_free_mutex(t_main *main)
     while (++i < main->num_philos)
     {
         pthread_mutex_destroy(&main->philos[i]->r_fork);
+        pthread_mutex_destroy(&main->philos[i]->eat);
         free(main->philos[i]);
         main->philos[i] = NULL;
     }
@@ -165,19 +177,39 @@ int ft_check_args(int argc, char **argv)
 void    ft_print_actions(t_philos *philo, size_t time, int action)
 {
     (void)time;
+   
     pthread_mutex_lock(&(philo->main->mute_print));
-    if (!(philo->main->dead) && action == EAT && !philo->main->all_meals)
+    if (!is_simulation_dead(philo->main) && action == EAT)
+        printf("%ld %d has eaten\n", get_time_ms(), philo->id);
+    else if (action == DEAD)
+        printf("%ld %d died\n", get_time_ms(), philo->id);
+    else if (!is_simulation_dead(philo->main) && action == FORK)
+        printf("%ld %d has taken a fork\n",get_time_ms(), philo->id);
+    else if (!is_simulation_dead(philo->main) && action == SLEEP)
+        printf("%ld %d is sleeping\n",get_time_ms(),  philo->id);
+    else if (!is_simulation_dead(philo->main) && action == THINK)
+        printf("%ld %d is thinking\n", get_time_ms(), philo->id);
+    pthread_mutex_unlock(&(philo->main->mute_print));
+}
+/*
+void    ft_print_actions(t_philos *philo, size_t time, int action)
+{
+    (void)time;
+    printf("print actions\n");
+    pthread_mutex_lock(&(philo->main->mute_print));
+    if (!is_simulation_dead(philo->main) && action == EAT && !is_all_meals_done(philo->main))
         printf("%ld %d has eaten\n", get_time_ms(), philo->id);
     else if (action == DEAD && !philo->main->all_meals)
         printf("%ld %d died\n", get_time_ms(), philo->id);
-    else if (!(philo->main->dead) && action == FORK && !philo->main->all_meals)
+    else if (!is_simulation_dead(philo->main) && action == FORK && !is_all_meals_done(philo->main))
         printf("%ld %d has taken a fork\n",get_time_ms(), philo->id);
     else if (!(philo->main->dead) && action == SLEEP && !philo->main->all_meals)
         printf("%ld %d is sleeping\n",get_time_ms(),  philo->id);
     else if (!(philo->main->dead) && action == THINK && !philo->main->all_meals)
         printf("%ld %d is thinking\n", get_time_ms(), philo->id);
     pthread_mutex_unlock(&(philo->main->mute_print));
-}
+}*/
+
 
 void    ft_eat_alone(t_philos *philo)
 {
@@ -233,12 +265,11 @@ int is_dead(t_philos *philo)
     pthread_mutex_lock(&philo->eat);
     die = get_time_ms() - philo->last_meal;
     pthread_mutex_unlock(&philo->eat);
-
     if (die > philo->main->time_to_die)
     {
-        pthread_mutex_lock(&philo->main->mute_print);
+        pthread_mutex_lock(&philo->main->mute_main);
         philo->main->dead = true;
-        pthread_mutex_unlock(&philo->main->mute_print);
+        pthread_mutex_unlock(&philo->main->mute_main);
         ft_print_actions(philo, philo->main->time, DEAD);
         return (0);
     }
@@ -254,8 +285,9 @@ void    *ft_simulation(void *data)
     pthread_mutex_unlock(&(philo->main->mute_main));
     if (philo->id % 2 != 0)
         ft_usleep(philo->main->time_to_eat);
-    while (!(philo->main->dead) && philo->main->num_meals != philo->num_meal)
+    while (!is_simulation_dead(philo->main) && philo->main->num_meals != philo->num_meal)
     {
+        printf("holi\n");
         ft_eat(philo);
         ft_print_actions(philo, philo->main->time, SLEEP);
         ft_usleep(philo->main->time_to_sleep);
@@ -328,10 +360,10 @@ int ft_init_simulation(t_main *main)
         i++;
     }
     pthread_mutex_unlock(&(main->mute_main));
+    pthread_join(monitor_th, NULL);
     i = 0;
     while (i < main->num_philos)
         pthread_join(main->philos[i++]->thread, NULL);
-    pthread_join(monitor_th, NULL);
     return (1);
 }
 
