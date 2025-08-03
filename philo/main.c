@@ -287,7 +287,6 @@ void    *ft_simulation(void *data)
         ft_usleep(philo->main->time_to_eat);
     while (!is_simulation_dead(philo->main) && philo->main->num_meals != philo->num_meal)
     {
-        printf("holi\n");
         ft_eat(philo);
         ft_print_actions(philo, philo->main->time, SLEEP);
         ft_usleep(philo->main->time_to_sleep);
