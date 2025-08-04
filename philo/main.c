@@ -215,7 +215,7 @@ void    ft_eat_alone(t_philos *philo)
 {
     pthread_mutex_lock(&philo->r_fork);
     ft_print_actions(philo, philo->main->time, FORK);
-    usleep(philo->main->time_to_die);
+    ft_usleep(philo->main->time_to_die - elapsed_time(philo));
     pthread_mutex_lock(&philo->main->mute_print);
     printf("%ld %d died\n", get_time_ms(), philo->id);
     pthread_mutex_unlock(&philo->main->mute_print);
@@ -288,6 +288,8 @@ void    *ft_simulation(void *data)
     while (!is_simulation_dead(philo->main) && philo->main->num_meals != philo->num_meal)
     {
         ft_eat(philo);
+        if (philo->main->num_meals == philo->num_meal)
+            break ;
         ft_print_actions(philo, philo->main->time, SLEEP);
         ft_usleep(philo->main->time_to_sleep);
         ft_print_actions(philo, philo->main->time, THINK);
