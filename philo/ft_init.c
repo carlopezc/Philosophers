@@ -40,6 +40,7 @@ int ft_init_main(int argc, char **argv, t_main *main)
     main->time_to_eat = (size_t)ft_atol(argv[3]);
     main->time_to_sleep = (size_t)ft_atol(argv[4]);
     main->time = 0;
+    main->dead = 0;
     if (argc == 6)
         main->num_meals = ft_atol(argv[5]);
     else
