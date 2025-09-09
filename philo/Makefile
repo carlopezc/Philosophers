@@ -3,15 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: carlotalcd <carlotalcd@student.42.fr>      +#+  +:+       +#+         #
+#    By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/17 12:23:06 by carlopez          #+#    #+#              #
-#    Updated: 2025/08/07 22:12:23 by carlotalcd       ###   ########.fr        #
+#    Updated: 2025/09/09 16:15:10 by carlopez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CCFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CCFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread
 NAME = philo
 
 AR = ar
