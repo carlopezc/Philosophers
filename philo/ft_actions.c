@@ -18,8 +18,8 @@ void    ft_eat(t_philos *philo)
 {
     if (philo->main->num_philos == 1)
         return (ft_eat_alone(philo));
-    //if (!((philo->last_meal + philo->main->time_to_eat) * 0.5 > get_time_ms()))
-	  //  	usleep(100);
+   // if (!((philo->last_meal + philo->main->time_to_eat) * 0.5 > ft_get_time_ms()))
+	 // 	usleep(100);
     if (philo->id % 2 == 0)
     {
         pthread_mutex_lock(&philo->r_fork);
@@ -54,15 +54,16 @@ void    *ft_simulation(void *data)
     pthread_mutex_lock(&(philo->main->mute_main));
     pthread_mutex_unlock(&(philo->main->mute_main));
     if (philo->id % 2 != 0)
-        ft_usleep(philo->main->time_to_eat);
+        ft_usleep(philo->main->time_to_eat/2);
     while (!ft_is_simulation_dead(philo->main) && philo->main->num_meals != philo->num_meal)
     {
         ft_eat(philo);
-        if (philo->main->num_meals == philo->num_meal)
+        if (ft_is_simulation_dead(philo->main) || philo->main->num_meals == philo->num_meal)
             break ;
         ft_print_actions(philo, SLEEP);
-        ft_usleep(philo->main->time_to_sleep);
+        usleep(philo->main->time_to_sleep * 1000);
         ft_print_actions(philo, THINK);
+        usleep(200);
     }
     return (NULL);
 }

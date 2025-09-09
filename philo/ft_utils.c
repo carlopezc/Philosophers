@@ -46,7 +46,7 @@ void    ft_print_actions(t_philos *philo, int action)
     dead = ft_is_simulation_dead(philo->main);
     pthread_mutex_lock(&(philo->main->mute_print));
     if (!dead && action == EAT)
-        printf("%ld %d has eaten\n", ft_get_time_ms(), philo->id);
+        printf("%ld %d is eating\n", ft_get_time_ms(), philo->id);
     else if (action == DEAD)
         printf("%ld %d died\n", ft_get_time_ms(), philo->id);
     else if (!dead && action == FORK)

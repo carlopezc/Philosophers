@@ -30,16 +30,17 @@ void	*ft_monitor(void *data)
 		return (NULL);
 	while (1)
 	{
-		i = -1;
+		i = 0;
 		flag_meals = 0;
-		while (++i < table->num_philos)
+		while (i < table->num_philos)
 		{
+            if (ft_check_death(table->philos[i]))
+				return (NULL);
 			if (ft_check_meal_count(table->philos[i], &flag_meals, table))
 				return (NULL);
-			if (ft_check_death(table->philos[i]))
-				return (NULL);
+            i++;
 		}
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }
