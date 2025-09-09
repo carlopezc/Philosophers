@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:11:55 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 16:11:56 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:09:27 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ int ft_init_simulation(t_main *main)
     pthread_mutex_lock(&(main->mute_main));
     while (i < main->num_philos)
     {
-        //pthread_mutex_lock(&main->philos[i]->eat);
-        //main->philos[i]->last_meal = ft_get_time_ms();
-        //pthread_mutex_unlock(&main->philos[i]->eat);
         if (pthread_create(&main->philos[i]->thread, NULL, &ft_simulation, main->philos[i]))
             return (printf("Error creating thread\n"), 0);
         i++;

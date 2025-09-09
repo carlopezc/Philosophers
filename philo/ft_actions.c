@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:11:39 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 16:11:41 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:45:27 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void    ft_eat(t_philos *philo)
 {
     if (philo->main->num_philos == 1)
         return (ft_eat_alone(philo));
-   // if (!((philo->last_meal + philo->main->time_to_eat) * 0.5 > ft_get_time_ms()))
-	 // 	usleep(100);
+   if (!((philo->last_meal + philo->main->time_to_eat) * 0.5 > ft_get_time_ms()))
+	  	ft_usleep(100);
     if (philo->id % 2 == 0)
     {
         pthread_mutex_lock(&philo->r_fork);
@@ -75,7 +75,7 @@ void    *ft_simulation(void *data)
         ft_print_actions(philo, SLEEP);
         usleep(philo->main->time_to_sleep * 1000);
         ft_print_actions(philo, THINK);
-        usleep(200);
+        ft_usleep(200);
     }
     return (NULL);
 }
