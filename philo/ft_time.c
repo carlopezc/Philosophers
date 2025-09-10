@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:11 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/10 15:33:45 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 18:28:09 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_usleep(long ms)
 	long	start;
 	long	now;
 	long	remaining;
-	
+
 	if (ms <= 0)
 		return ;
 	start = ft_get_time_ms();
@@ -40,11 +40,11 @@ void	ft_usleep(long ms)
 		now = ft_get_time_ms();
 		remaining = ms - (now - start);
 		if (remaining <= 0)
-			break;
+			break ;
 		if (remaining > 10)
-			usleep(500);  // más eficiente para tiempos largos
+			usleep(500);
 		else
-			usleep(100);  // más preciso para tramos cortos
+			usleep(100);
 	}
 }
 

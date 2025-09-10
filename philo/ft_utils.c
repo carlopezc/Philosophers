@@ -6,15 +6,15 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:17 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/10 15:23:37 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 18:31:16 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_philosophers.h"
 
-int ft_is_simulation_dead(t_main *main)
+int	ft_is_simulation_dead(t_main *main)
 {
-	int dead;
+	int	dead;
 
 	pthread_mutex_lock(&main->mute_main);
 	dead = main->dead;
@@ -24,8 +24,8 @@ int ft_is_simulation_dead(t_main *main)
 
 long	ft_atol(const char *nptr)
 {
-	int	i;
-	int	sign;
+	int		i;
+	int		sign;
 	long	num;
 
 	i = 0;
@@ -44,26 +44,25 @@ long	ft_atol(const char *nptr)
 	return (sign * num);
 }
 
-int ft_is_digit(char c)
+int	ft_is_digit(char c)
 {
-    if (c >= '0' && c <= '9')
-        return (1);
-    return (0);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
 
-void    ft_print_actions(t_philos *philo, int action)
+void	ft_print_actions(t_philos *philo, int action)
 {
-
-    pthread_mutex_lock(&(philo->main->mute_print));
-    if (!ft_is_simulation_dead(philo->main) && action == EAT)
-        printf("%ld %d is eating\n", ft_get_time_ms(), philo->id);
-    else if (action == DEAD)
-        printf("%ld %d died\n", ft_get_time_ms(), philo->id);
-    else if (!ft_is_simulation_dead(philo->main) && action == FORK)
-        printf("%ld %d has taken a fork\n", ft_get_time_ms(), philo->id);
-    else if (!ft_is_simulation_dead(philo->main) && action == SLEEP)
-        printf("%ld %d is sleeping\n", ft_get_time_ms(),  philo->id);
-    else if (!ft_is_simulation_dead(philo->main) && action == THINK)
-        printf("%ld %d is thinking\n", ft_get_time_ms(), philo->id);
-    pthread_mutex_unlock(&(philo->main->mute_print));
+	pthread_mutex_lock(&(philo->main->mute_print));
+	if (!ft_is_simulation_dead(philo->main) && action == EAT)
+		printf("%ld %d is eating\n", ft_get_time_ms(), philo->id);
+	else if (action == DEAD)
+		printf("%ld %d died\n", ft_get_time_ms(), philo->id);
+	else if (!ft_is_simulation_dead(philo->main) && action == FORK)
+		printf("%ld %d has taken a fork\n", ft_get_time_ms(), philo->id);
+	else if (!ft_is_simulation_dead(philo->main) && action == SLEEP)
+		printf("%ld %d is sleeping\n", ft_get_time_ms(), philo->id);
+	else if (!ft_is_simulation_dead(philo->main) && action == THINK)
+		printf("%ld %d is thinking\n", ft_get_time_ms(), philo->id);
+	pthread_mutex_unlock(&(philo->main->mute_print));
 }
