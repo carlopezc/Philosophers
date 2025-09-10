@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:06 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 16:12:07 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:39:01 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ typedef struct s_main
     long time_to_die;
     size_t time_to_eat;
     size_t time_to_sleep;
-    size_t  time;
     int num_meals;
     t_philos    **philos;
     bool    dead;

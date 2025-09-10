@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:00 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 16:12:03 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:20:30 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ void	*ft_monitor(void *data)
 		flag_meals = 0;
 		while (i < table->num_philos)
 		{
-            if (ft_check_death(table->philos[i]))
-				return (NULL);
-			if (ft_check_meal_count(table->philos[i], &flag_meals, table))
+			if (ft_check_death(table->philos[i]) || ft_check_meal_count(table->philos[i], &flag_meals, table))
 				return (NULL);
             i++;
 		}

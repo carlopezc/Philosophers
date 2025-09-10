@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:17 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 16:12:19 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 15:23:37 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,17 @@ int ft_is_digit(char c)
 
 void    ft_print_actions(t_philos *philo, int action)
 {
-    int dead;
 
-    dead = ft_is_simulation_dead(philo->main);
     pthread_mutex_lock(&(philo->main->mute_print));
-    if (!dead && action == EAT)
+    if (!ft_is_simulation_dead(philo->main) && action == EAT)
         printf("%ld %d is eating\n", ft_get_time_ms(), philo->id);
     else if (action == DEAD)
         printf("%ld %d died\n", ft_get_time_ms(), philo->id);
-    else if (!dead && action == FORK)
+    else if (!ft_is_simulation_dead(philo->main) && action == FORK)
         printf("%ld %d has taken a fork\n", ft_get_time_ms(), philo->id);
-    else if (!dead && action == SLEEP)
+    else if (!ft_is_simulation_dead(philo->main) && action == SLEEP)
         printf("%ld %d is sleeping\n", ft_get_time_ms(),  philo->id);
-    else if (!dead && action == THINK)
+    else if (!ft_is_simulation_dead(philo->main) && action == THINK)
         printf("%ld %d is thinking\n", ft_get_time_ms(), philo->id);
     pthread_mutex_unlock(&(philo->main->mute_print));
 }

@@ -6,7 +6,7 @@
 /*   By: carlopez <carlopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 16:12:11 by carlopez          #+#    #+#             */
-/*   Updated: 2025/09/09 17:44:16 by carlopez         ###   ########.fr       */
+/*   Updated: 2025/09/10 15:33:45 by carlopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	ft_usleep(long ms)
 	long	start;
 	long	now;
 	long	remaining;
-
+	
+	if (ms <= 0)
+		return ;
 	start = ft_get_time_ms();
 	while (1)
 	{
